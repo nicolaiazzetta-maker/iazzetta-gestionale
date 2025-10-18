@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#667eea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Iazzetta">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiSWF6emV0dGEgR2VzdGlvbmFsZSIsInNob3J0X25hbWUiOiJJYXp6ZXR0YSIsInN0YXJ0X3VybCI6Ii4vIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2ZmZmZmZiIsInRoZW1lX2NvbG9yIjoiIzY2N2VlYSIsImlkZW50aXR5IjoiaWF6emV0dGEiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxOTInIGhlaWdodD0nMTkyJyB2aWV3Qm94PScwIDAgMTkyIDE5Mic+PHJlY3Qgd2lkdGg9JzE5MicgaGVpZ2h0PScxOTInIGZpbGw9JyUyMzY2N2VlYScgcng9JzQwJy8+PHRleHQgeD0nNTAlMjUnIHk9JzUwJTI1JyBmb250LXNpemU9JzgwJyBmaWxsPSclMjNmZmZmZmYnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGR5PScuMzVlbSc+8J+PlzwvdGV4dD48L3N2Zz4iLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9LHsic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyB2aWV3Qm94PScwIDAgNTEyIDUxMic+PHJlY3Qgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInIGZpbGw9JyUyMzY2N2VlYScgcng9JzgwJy8+PHRleHQgeD0nNTAlMjUnIHk9JzUwJTI1JyBmb250LXNpemU9JzI1MCcgZmlsbD0nJTIzZmZmZmZmJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBkeT0nLjM1ZW0nPvCfj5c8L3RleHQ+PC9zdmc+Iiwic2l6ZXMiOiI1MTJ4NTEyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+<title>Iazzetta Gestionale</title>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+import {getFirestore,collection,addDoc,getDocs,doc,updateDoc,deleteDoc} from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+const cfg={apiKey:"AIzaSyAFFj43duv4D0uFilI5l3B5Ri7SVe_VITI",authDomain:"gestionalelazzetta.firebaseapp.com",projectId:"gestionalelazzetta",storageBucket:"gestionalelazzetta.firebasestorage.app",messagingSenderId:"1073307385185",appId:"1:1073307385185:web:5ad1861bc1efe9a1a25920"};
+const app=initializeApp(cfg);
+window.fb={auth:getAuth(app),db:getFirestore(app),utils:{createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut,collection,addDoc,getDocs,doc,updateDoc,deleteDoc}};
+</script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>window.QRCode={toDataURL:function(t,o){return new Promise(function(r){o=o||{};var e=o.width||200,n=qrcode(0,"M");n.addData(t),n.make();var a=document.createElement("canvas");a.width=e,a.height=e;var c=a.getContext("2d");c.fillStyle="#fff",c.fillRect(0,0,e,e);for(var i=n.getModuleCount(),l=e/i,d=(c.fillStyle="#000",0);d<i;d++)for(var s=0;s<i;s++)n.isDark(d,s)&&c.fillRect(s*l,d*l,l,l);r(a.toDataURL())})}};</script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+body{margin:0;font-family:system-ui,sans-serif;background:#f5f5f5}
+.spinner{border:3px solid #f3f4f6;border-top:3px solid #3b82f6;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:auto}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;overflow-y:auto}
+</style>
+</head>
+<body><div id="root"></div><script type="text/babel">
+const {useState,useEffect,useRef}=React;
+const fmt={curr:v=>`€${Number(v||0).toLocaleString('it-IT',{minimumFractionDigits:2})}`,date:d=>d?new Date(d).toLocaleDateString('it-IT'):'',datetime:d=>d?new Date(d).toLocaleString('it-IT'):''};
+const Icon={Home:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>,Users:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>,Tool:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>,Package:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>,Briefcase:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>,FileText:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>,Calendar:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>,Chart:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>,Plus:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4"/></svg>,Edit:()=><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>,Trash:()=><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>,X:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/></svg>,Download:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>,Truck:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>,Clipboard:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>,Check:()=><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>,Printer:()=><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>};
+
+const LoginPage=({onLogin})=>{
+const[email,setEmail]=useState('');
+const[password,setPassword]=useState('');
+const[loading,setLoading]=useState(false);
+const[error,setError]=useState('');
+const handleSubmit=async(e)=>{
+e.preventDefault();
+setLoading(true);
+setError('');
+try{
+const{signInWithEmailAndPassword,createUserWithEmailAndPassword}=window.fb.utils;
+try{
+const cred=await signInWithEmailAndPassword(window.fb.auth,email,password);
+onLogin(cred.user);
+}catch(err){
+if(err.code==='auth/user-not-found'||err.code==='auth/invalid-credential'){
+const cred=await createUserWithEmailAndPassword(window.fb.auth,email,password);
+onLogin(cred.user);
+}else throw err;
+}
+}catch(err){
+setError(err.message);
+}finally{
+setLoading(false);
+}
+};
+return(
+<div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 flex items-center justify-center p-4">
+<div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md">
+<div className="text-center mb-8">
+<div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+<Icon.Tool/>
+</div>
+<h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Iazzetta</h1>
+<p className="text-gray-600 mt-2">Gestionale Completo</p>
+</div>
+{error&&<div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-4 text-sm">{error}</div>}
+<form onSubmit={handleSubmit} className="space-y-4">
+<div>
+<label className="block text-sm font-semibold mb-2">Email</label>
+<input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} className="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" required/>
+</div>
+<div>
+<label className="block text-sm font-semibold mb-2">Password</label>
+<input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} className="w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" required minLength="6"/>
+</div>
+<button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50">
+{loading?<div className="spinner"></div>:'🔐 Accedi'}
+</button>
+</form>
+</div>
+</div>
+);
+};
+
+const App=()=>{
+const[user,setUser]=useState(null);
+const[loading,setLoading]=useState(true);
+const[section,setSection]=useState('dashboard');
+const[search,setSearch]=useState('');
+const[modal,setModal]=useState({show:false,type:'',data:null});
+const[fornitori,setFornitori]=useState([{id:1,nome:'Elettroforniture SRL',piva:'98765432101',tel:'081-1111111',email:'info@elettro.it'}]);
+const[cantieri,setCantieri]=useState([{id:1,nome:'Villa Roma',cliente:'Mario Rossi',indirizzo:'Via Roma 123',stato:'In corso',dataInizio:'2025-01-15',budget:150000,speso:45000}]);
+const[dipendenti,setDipendenti]=useState([{id:1,nome:'Giuseppe',cognome:'Esposito',ruolo:'Elettricista',matricola:'E001',tel:'333-1234567',costoOrario:25,dpi:[],visite:[],corsi:[]}]);
+const[attrezzature,setAttrezzature]=useState([{id:1,nome:'Trapano Bosch',codice:'ATT001',tipo:'singola',cat:'Elettroutensili',qta:1,um:'pz',giacenze:{'Deposito':1},ubicazione:'Deposito',stato:'Disponibile',valore:350,assegnatoA:null,componenti:[]}]);
+const[materiali,setMateriali]=useState([{id:1,codice:'MAT001',nome:'Cavi 2.5mm²',cat:'Elettrico',giacenza:500,um:'m',costo:1.50,min:100,fornitoreId:1}]);
+const[movimenti,setMovimenti]=useState([]);
+const[mezzi,setMezzi]=useState([{id:1,tipo:'Furgone',marca:'Fiat',modello:'Ducato',targa:'AB123CD',km:45230,costoKm:0.45}]);
+const[rapportini,setRapportini]=useState([]);
+const[ddt,setDdt]=useState([]);
+const[ordini,setOrdini]=useState([]);
+const[scadenze,setScadenze]=useState([{id:1,tipo:'Revisione',descrizione:'Revisione Furgone AB123CD',data:'2025-11-15',completato:false,alert:15}]);
+const[filtroData1,setFiltroData1]=useState('');
+const[filtroData2,setFiltroData2]=useState('');
+const[filtroCantiere,setFiltroCantiere]=useState('');
+const[filtroDipendente,setFiltroDipendente]=useState('');
+
+useEffect(()=>{
+const unsub=window.fb.utils.onAuthStateChanged(window.fb.auth,(u)=>{
+setUser(u);
+setLoading(false);
+});
+return()=>unsub();
+},[]);
+
+const handleLogout=async()=>{await window.fb.utils.signOut(window.fb.auth)};
+const openModal=(type,data=null)=>setModal({show:true,type,data});
+const closeModal=()=>setModal({show:false,type:'',data:null});
+
+const handleExportExcel=()=>{
+const wb=XLSX.utils.book_new();
+XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(cantieri),'Cantieri');
+XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(dipendenti),'Dipendenti');
+XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(materiali),'Materiali');
+XLSX.writeFile(wb,'Iazzetta_'+new Date().toISOString().split('T')[0]+'.xlsx');
+};
+
+const handleBackup=()=>{
+const backup={fornitori,cantieri,dipendenti,attrezzature,materiali,movimenti,mezzi,rapportini,ddt,ordini,scadenze,data:new Date().toISOString()};
+const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');
+a.href=url;
+a.download='Backup_'+new Date().toISOString().split('T')[0]+'.json';
+a.click();
+};
+
+const handlePrintQR=async(code,name)=>{
+const qr=await QRCode.toDataURL(code,{width:300});
+const w=window.open('','_blank');
+w.document.write(`<html><head><title>QR ${name}</title><style>body{text-align:center;padding:40px;font-family:Arial}img{border:3px solid #000;padding:15px}</style></head><body><h2>${name}</h2><img src="${qr}"/><p style="font-family:monospace;font-size:24px;font-weight:bold">${code}</p></body></html>`);
+w.document.close();
+setTimeout(()=>w.print(),500);
+};
+
+const handlePrintQRMultiple=async(items)=>{
+if(!items||items.length===0){alert('Nessuna attrezzatura selezionata');return;}
+try{
+const qrCodes=await Promise.all(items.map(item=>QRCode.toDataURL(item.codice,{width:250,margin:1})));
+const w=window.open('','_blank','width=800,height=600');
+if(!w){alert('Popup bloccato! Abilita i popup per stampare.');return;}
+w.document.write(`<!DOCTYPE html><html><head><title>Etichette QR - ${items.length} attrezzature</title><style>
+@media print{@page{size:A4;margin:10mm}body{margin:0}}
+body{margin:10mm;padding:0;font-family:Arial,sans-serif;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8mm;page-break-inside:avoid}
+.label{border:3px solid #000;padding:6mm;text-align:center;page-break-inside:avoid;min-height:85mm;display:flex;flex-direction:column;justify-content:space-between;align-items:center;background:#fff}
+.label h3{margin:0;font-size:16pt;font-weight:bold;color:#000;word-wrap:break-word;max-width:100%}
+.label img{width:180px;height:180px;margin:8mm 0;border:2px solid #ddd;padding:3mm}
+.label p{margin:0;font-family:monospace;font-size:14pt;font-weight:bold;color:#000;letter-spacing:1px}
+@media screen{body{background:#f5f5f5}.grid{gap:15px}.label{box-shadow:0 2px 8px rgba(0,0,0,0.1)}}
+.print-btn{position:fixed;top:10px;right:10px;padding:12px 24px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer;z-index:1000}
+.print-btn:hover{background:#2563eb}
+@media print{.print-btn{display:none}}
+</style></head><body>
+<button class="print-btn" onclick="window.print()">🖨️ Stampa Etichette</button>
+<div class="grid">`);
+items.forEach((item,i)=>{
+w.document.write(`<div class="label">
+<h3>${item.nome||'N/A'}</h3>
+<img src="${qrCodes[i]}" alt="QR ${item.codice}"/>
+<p>${item.codice||'N/A'}</p>
+</div>`);
+});
+w.document.write('</div></body></html>');
+w.document.close();
+}catch(err){
+console.error('Errore stampa QR:',err);
+alert('Errore durante la generazione dei QR Code');
+}
+};
+
+const handlePrintPDF=(type,data)=>{
+const{jsPDF}=window.jspdf;
+const doc=new jsPDF();
+doc.setFontSize(20);
+doc.text('IAZZETTA SRL',105,20,{align:'center'});
+doc.setFontSize(10);
+doc.text('Gestionale Completo',105,27,{align:'center'});
+doc.line(20,30,190,30);
+doc.setFontSize(14);
+doc.text(type.toUpperCase(),20,40);
+doc.setFontSize(10);
+doc.text(`Data: ${fmt.date(new Date())}`,20,47);
+if(type==='Rapportino'){
+const c=cantieri.find(x=>x.id===data.cantiereId);
+doc.text(`Cantiere: ${c?.nome||''}`,20,60);
+doc.text(`Lavori: ${data.lavori||''}`,20,70);
+}else if(type==='DDT'){
+const f=fornitori.find(x=>x.id===data.fornitoreId);
+doc.text(`Numero: ${data.numero}`,20,60);
+doc.text(`Fornitore: ${f?.nome||''}`,20,67);
+doc.text(`Totale: ${fmt.curr(data.totale)}`,20,74);
+}
+doc.save(`${type}_${Date.now()}.pdf`);
+};
+
+const WizardRapportino=()=>{
+const[step,setStep]=useState(1);
+const[form,setForm]=useState({data:new Date().toISOString().split('T')[0],cantiereId:'',presenze:[],attrezzature:[],materiali:[],lavori:'',meteo:'Sereno'});
+const addPres=()=>setForm({...form,presenze:[...form.presenze,{dipId:'',ore:8,straord:0}]});
+const updPres=(i,f,v)=>{const p=[...form.presenze];p[i][f]=f==='dipId'?Number(v):v;setForm({...form,presenze:p})};
+const remPres=(i)=>setForm({...form,presenze:form.presenze.filter((_,x)=>x!==i)});
+const toggleAttr=(id)=>setForm({...form,attrezzature:form.attrezzature.includes(id)?form.attrezzature.filter(x=>x!==id):[...form.attrezzature,id]});
+const addMat=()=>setForm({...form,materiali:[...form.materiali,{matId:'',qta:0}]});
+const updMat=(i,f,v)=>{const m=[...form.materiali];m[i][f]=f==='matId'?Number(v):Number(v);setForm({...form,materiali:m})};
+const remMat=(i)=>setForm({...form,materiali:form.materiali.filter((_,x)=>x!==i)});
+const handleSave=()=>{setRapportini([{...form,id:Date.now()},...rapportini]);closeModal()};
+return(
+<div className="space-y-6">
+<div className="flex justify-between items-center">
+<h3 className="text-2xl font-bold">📋 Rapportino</h3>
+<div className="flex gap-2">
+{[1,2,3,4,5].map(s=><span key={s} className={`px-3 py-1 rounded-full text-sm ${step===s?'bg-blue-600 text-white':'bg-gray-200'}`}>{s}</span>)}
+</div>
+</div>
+{step===1&&<div className="space-y-4"><input type="date" value={form.data} onChange={(e)=>setForm({...form,data:e.target.value})} className="w-full px-4 py-3 border-2 rounded-lg"/><select value={form.cantiereId} onChange={(e)=>setForm({...form,cantiereId:Number(e.target.value)})} className="w-full px-4 py-3 border-2 rounded-lg"><option value="">Cantiere *</option>{cantieri.map(c=><option key={c.id} value={c.id}>{c.nome}</option>)}</select><textarea placeholder="Lavori *" value={form.lavori} onChange={(e)=>setForm({...form,lavori:e.target.value})} className="w-full px-4 py-3 border-2 rounded-lg" rows="4"/><input type="text" placeholder="Meteo" value={form.meteo} onChange={(e)=>setForm({...form,meteo:e.target.value})} className="w-full px-4 py-3 border-2 rounded-lg"/></div>}
+{step===2&&<div className="space-y-4"><div className="flex justify-between"><h4 className="font-bold">Presenze</h4><button onClick={addPres} className="px-4 py-2 bg-blue-600 text-white rounded-lg">+ Aggiungi</button></div>{form.presenze.map((p,i)=><div key={i} className="grid grid-cols-4 gap-2 bg-gray-50 p-3 rounded-lg"><select value={p.dipId} onChange={(e)=>updPres(i,'dipId',e.target.value)} className="px-3 py-2 border rounded"><option value="">Operaio</option>{dipendenti.map(d=><option key={d.id} value={d.id}>{d.nome} {d.cognome}</option>)}</select><input type="number" placeholder="Ore" value={p.ore} onChange={(e)=>updPres(i,'ore',e.target.value)} className="px-3 py-2 border rounded"/><input type="number" placeholder="Straord." value={p.straord} onChange={(e)=>updPres(i,'straord',e.target.value)} className="px-3 py-2 border rounded"/><button onClick={()=>remPres(i)} className="px-3 py-2 bg-red-500 text-white rounded">🗑️</button></div>)}</div>}
+{step===3&&<div className="space-y-4"><h4 className="font-bold">Attrezzature</h4><div className="grid grid-cols-2 gap-3">{attrezzature.map(a=><div key={a.id} className={`p-4 border-2 rounded-lg cursor-pointer ${form.attrezzature.includes(a.id)?'border-blue-600 bg-blue-50':'border-gray-200'}`} onClick={()=>toggleAttr(a.id)}><div className="flex items-center gap-2">{form.attrezzature.includes(a.id)?<Icon.Check/>:<div className="w-5 h-5 border-2 rounded"></div>}<div><p className="font-bold">{a.nome}</p><p className="text-sm text-gray-600">{a.codice}</p></div></div></div>)}</div></div>}
+{step===4&&<div className="space-y-4"><div className="flex justify-between"><h4 className="font-bold">Materiali</h4><button onClick={addMat} className="px-4 py-2 bg-blue-600 text-white rounded-lg">+ Aggiungi</button></div>{form.materiali.map((m,i)=><div key={i} className="grid grid-cols-3 gap-2 bg-gray-50 p-3 rounded-lg"><select value={m.matId} onChange={(e)=>updMat(i,'matId',e.target.value)} className="px-3 py-2 border rounded"><option value="">Materiale</option>{materiali.map(mat=><option key={mat.id} value={mat.id}>{mat.nome}</option>)}</select><input type="number" placeholder="Qta" value={m.qta} onChange={(e)=>updMat(i,'qta',e.target.value)} className="px-3 py-2 border rounded"/><button onClick={()=>remMat(i)} className="px-3 py-2 bg-red-500 text-white rounded">🗑️</button></div>)}</div>}
+{step===5&&<div className="bg-gray-50 p-6 rounded-lg"><h4 className="font-bold mb-4">Riepilogo</h4><p><strong>Cantiere:</strong> {cantieri.find(c=>c.id===form.cantiereId)?.nome}</p><p><strong>Data:</strong> {fmt.date(form.data)}</p><p><strong>Presenze:</strong> {form.presenze.length}</p><p><strong>Attrezzature:</strong> {form.attrezzature.length}</p><p><strong>Materiali:</strong> {form.materiali.length}</p></div>}
+<div className="flex justify-between pt-4 border-t-2">
+<button onClick={()=>step>1&&setStep(step-1)} disabled={step===1} className="px-6 py-2 bg-gray-200 rounded-lg disabled:opacity-50">← Indietro</button>
+{step<5?<button onClick={()=>setStep(step+1)} className="px-6 py-2 bg-blue-600 text-white rounded-lg">Avanti →</button>:<button onClick={handleSave} className="px-6 py-2 bg-green-600 text-white rounded-lg font-bold">✓ Salva</button>}
+</div>
+</div>
+);
+};
+
+const Modal=()=>{
+if(!modal.show)return null;
+if(modal.type==='rapportini')return<div className="modal" onClick={closeModal}><div className="bg-white rounded-2xl p-6 w-full max-w-4xl" onClick={(e)=>e.stopPropagation()}><WizardRapportino/></div></div>;
+if(modal.type==='dipDettaglio'){
+const[tab,setTab]=useState('dpi');
+const[dip,setDip]=useState(modal.data);
+const[newItem,setNewItem]=useState({});
+const saveDip=()=>setDipendenti(dipendenti.map(d=>d.id===dip.id?dip:d));
+return<div className="modal" onClick={closeModal}><div className="bg-white rounded-2xl p-6 w-full max-w-5xl" onClick={(e)=>e.stopPropagation()}><div className="flex justify-between mb-6 border-b pb-4"><div><h3 className="text-2xl font-bold">{dip.nome} {dip.cognome}</h3><p className="text-gray-600">{dip.ruolo}</p></div><button onClick={closeModal} className="p-2 hover:bg-gray-100 rounded-lg"><Icon.X/></button></div><div className="flex gap-2 mb-6 border-b">{['dpi','visite','corsi','attr'].map(t=><button key={t} onClick={()=>setTab(t)} className={`px-4 py-2 font-semibold ${tab===t?'border-b-2 border-blue-600 text-blue-600':'text-gray-600'}`}>{t==='dpi'?'🛡️ DPI':t==='visite'?'🏥 Visite':t==='corsi'?'📚 Corsi':'🔧 Attr'}</button>)}</div>{tab==='dpi'&&<div className="space-y-4"><div className="bg-blue-50 p-4 rounded-lg"><h4 className="font-bold mb-3">➕ Nuovo DPI</h4><div className="grid grid-cols-3 gap-2"><input placeholder="Tipo" value={newItem.tipo||''} onChange={(e)=>setNewItem({...newItem,tipo:e.target.value})} className="px-3 py-2 border rounded"/><input placeholder="Marca" value={newItem.marca||''} onChange={(e)=>setNewItem({...newItem,marca:e.target.value})} className="px-3 py-2 border rounded"/><input type="date" value={newItem.dataConsegna||''} onChange={(e)=>setNewItem({...newItem,dataConsegna:e.target.value})} className="px-3 py-2 border rounded"/><input type="date" value={newItem.scadenza||''} onChange={(e)=>setNewItem({...newItem,scadenza:e.target.value})} className="px-3 py-2 border rounded"/><button onClick={()=>{if(newItem.tipo){setDip({...dip,dpi:[...(dip.dpi||[]),{...newItem,firma:'✓'}]});setNewItem({});saveDip();}}} className="px-4 py-2 bg-green-600 text-white rounded">Aggiungi</button></div></div>{(dip.dpi||[]).map((d,i)=><div key={i} className="bg-gray-50 p-4 rounded-lg flex justify-between"><div><p className="font-bold">{d.tipo}</p><p className="text-sm text-gray-600">{d.marca} - {fmt.date(d.dataConsegna)}</p></div><button onClick={()=>{setDip({...dip,dpi:dip.dpi.filter((_,x)=>x!==i)});saveDip();}} className="px-3 py-1 bg-red-500 text-white rounded text-sm">🗑️</button></div>)}</div>}{tab==='visite'&&<div className="space-y-4"><div className="bg-blue-50 p-4 rounded-lg"><h4 className="font-bold mb-3">➕ Nuova Visita</h4><div className="grid grid-cols-3 gap-2"><input placeholder="Tipo" value={newItem.tipo||''} onChange={(e)=>setNewItem({...newItem,tipo:e.target.value})} className="px-3 py-2 border rounded"/><input type="date" value={newItem.data||''} onChange={(e)=>setNewItem({...newItem,data:e.target.value})} className="px-3 py-2 border rounded"/><select value={newItem.esito||''} onChange={(e)=>setNewItem({...newItem,esito:e.target.value})} className="px-3 py-2 border rounded"><option value="">Esito</option><option value="Idoneo">Idoneo</option><option value="Non idoneo">Non idoneo</option></select><input type="date" value={newItem.prossima||''} onChange={(e)=>setNewItem({...newItem,prossima:e.target.value})} className="px-3 py-2 border rounded"/><button onClick={()=>{if(newItem.tipo){setDip({...dip,visite:[...(dip.visite||[]),newItem]});setNewItem({});saveDip();}}} className="px-4 py-2 bg-green-600 text-white rounded">Aggiungi</button></div></div>{(dip.visite||[]).map((v,i)=><div key={i} className="bg-gray-50 p-4 rounded-lg flex justify-between"><div><p className="font-bold">{v.tipo}</p><p className="text-sm text-gray-600">{fmt.date(v.data)} - {v.esito}</p></div><button onClick={()=>{setDip({...dip,visite:dip.visite.filter((_,x)=>x!==i)});saveDip();}} className="px-3 py-1 bg-red-500 text-white rounded text-sm">🗑️</button></div>)}</div>}{tab==='corsi'&&<div className="space-y-4"><div className="bg-blue-50 p-4 rounded-lg"><h4 className="font-bold mb-3">➕ Nuovo Corso</h4><div className="grid grid-cols-3 gap-2"><input placeholder="Nome" value={newItem.nome||''} onChange={(e)=>setNewItem({...newItem,nome:e.target.value})} className="px-3 py-2 border rounded"/><input type="date" value={newItem.data||''} onChange={(e)=>setNewItem({...newItem,data:e.target.value})} className="px-3 py-2 border rounded"/><input type="date" value={newItem.scadenza||''} onChange={(e)=>setNewItem({...newItem,scadenza:e.target.value})} className="px-3 py-2 border rounded"/><input placeholder="Certificato" value={newItem.certificato||''} onChange={(e)=>setNewItem({...newItem,certificato:e.target.value})} className="px-3 py-2 border rounded"/><button onClick={()=>{if(newItem.nome){setDip({...dip,corsi:[...(dip.corsi||[]),newItem]});setNewItem({});saveDip();}}} className="px-4 py-2 bg-green-600 text-white rounded">Aggiungi</button></div></div>{(dip.corsi||[]).map((c,i)=><div key={i} className="bg-gray-50 p-4 rounded-lg flex justify-between"><div><p className="font-bold">{c.nome}</p><p className="text-sm text-gray-600">{fmt.date(c.data)} - {c.certificato}</p></div><button onClick={()=>{setDip({...dip,corsi:dip.corsi.filter((_,x)=>x!==i)});saveDip();}} className="px-3 py-1 bg-red-500 text-white rounded text-sm">🗑️</button></div>)}</div>}{tab==='attr'&&<div className="space-y-3">{attrezzature.filter(a=>a.assegnatoA===dip.id).map(a=><div key={a.id} className="bg-gray-50 p-4 rounded-lg flex justify-between"><div><p className="font-bold">{a.nome}</p><p className="text-sm text-gray-600">{a.codice}</p></div><button onClick={()=>handlePrintQR(a.codice,a.nome)} className="px-3 py-2 bg-blue-600 text-white rounded text-sm">QR</button></div>)}</div>}<div className="flex justify-end gap-2 mt-6 pt-4 border-t"><button onClick={()=>{saveDip();closeModal();}} className="px-6 py-2 bg-blue-600 text-white rounded-lg">✓ Chiudi</button></div></div></div>;
+}
+const[form,setForm]=useState(modal.data||{});
+const handleSave=()=>{
+const saveData={...form,id:modal.data?.id||Date.now()};
+if(modal.type==='fornitori')modal.data?setFornitori(fornitori.map(f=>f.id===modal.data.id?saveData:f)):setFornitori([...fornitori,saveData]);
+else if(modal.type==='cantieri')modal.data?setCantieri(cantieri.map(c=>c.id===modal.data.id?saveData:c)):setCantieri([...cantieri,saveData]);
+else if(modal.type==='dipendenti')modal.data?setDipendenti(dipendenti.map(d=>d.id===modal.data.id?saveData:d)):setDipendenti([...dipendenti,{...saveData,dpi:[],visite:[],corsi:[]}]);
+else if(modal.type==='attrezzature')modal.data?setAttrezzature(attrezzature.map(a=>a.id===modal.data.id?saveData:a)):setAttrezzature([...attrezzature,saveData]);
+else if(modal.type==='materiali')modal.data?setMateriali(materiali.map(m=>m.id===modal.data.id?saveData:m)):setMateriali([...materiali,saveData]);
+else if(modal.type==='movimenti'){
+const qta=Number(form.qta)||1;
+setMovimenti([{...saveData,qta,data:new Date().toISOString()},...movimenti]);
+const a=attrezzature.find(x=>x.id===Number(form.attrId));
+if(a){
+const newGiacenze={...a.giacenze};
+newGiacenze[form.da]=(newGiacenze[form.da]||0)-qta;
+newGiacenze[form.a]=(newGiacenze[form.a]||0)+qta;
+if(newGiacenze[form.da]<=0)delete newGiacenze[form.da];
+setAttrezzature(attrezzature.map(x=>x.id===a.id?{...x,giacenze:newGiacenze,ubicazione:Object.keys(newGiacenze)[0]||form.a}:x));
+}
+}
+else if(modal.type==='mezzi')modal.data?setMezzi(mezzi.map(m=>m.id===modal.data.id?saveData:m)):setMezzi([...mezzi,saveData]);
+else if(modal.type==='scadenze')modal.data?setScadenze(scadenze.map(s=>s.id===modal.data.id?saveData:s)):setScadenze([...scadenze,saveData]);
+else if(modal.type==='ddt'){const t=(form.articoli||[]).reduce((s,a)=>s+(a.qta*a.prezzo),0);const d={...saveData,totale:t};modal.data?setDdt(ddt.map(x=>x.id===modal.data.id?d:x)):setDdt([...ddt,d]);}
+else if(modal.type==='ordini'){const t=(form.articoli||[]).reduce((s,a)=>s+(a.qta*a.prezzo),0);const d={...saveData,totale:t};modal.data?setOrdini(ordini.map(x=>x.id===modal.data.id?d:x)):setOrdini([...ordini,d]);}
+closeModal();
+};
+const addArt=()=>setForm({...form,articoli:[...(form.articoli||[]),{matId:'',qta:0,prezzo:0}]});
+const remArt=(i)=>setForm({...form,articoli:form.articoli.filter((_,x)=>x!==i)});
+const updArt=(i,f,v)=>{const a=[...form.articoli];a[i][f]=f==='matId'?Number(v):Number(v);if(f==='matId'){const m=materiali.find(x=>x.id===Number(v));if(m)a[i].prezzo=m.costo;}setForm({...form,articoli:a})};
+return(
+<div className="modal" onClick={closeModal}>
+<div className="bg-white rounded-2xl p-6 w-full max-w-3xl max-h-[85vh] overflow-y-auto" onClick={(e)=>e.stopPropagation()}>
+<div className="flex justify-between items-center mb-6 pb-4 border-b-2">
+<h3 className="text-2xl font-bold">{modal.data?'✏️ Modifica':'✨ Nuovo'} {modal.type}</h3>
+<button onClick={closeModal} className="p-2 hover:bg-gray-100 rounded-lg"><Icon.X/></button>
+</div>
+<div className="space-y-4">
+{modal.type==='fornitori'&&<div className="grid grid-cols-2 gap-4"><input placeholder="Nome *" value={form.nome||''} onChange={(e)=>setForm({...form,nome:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="P.IVA" value={form.piva||''} onChange={(e)=>setForm({...form,piva:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Tel" value={form.tel||''} onChange={(e)=>setForm({...form,tel:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Email" type="email" value={form.email||''} onChange={(e)=>setForm({...form,email:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/></div>}
+{modal.type==='cantieri'&&<div className="grid grid-cols-2 gap-4"><input placeholder="Nome *" value={form.nome||''} onChange={(e)=>setForm({...form,nome:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Cliente" value={form.cliente||''} onChange={(e)=>setForm({...form,cliente:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Indirizzo" value={form.indirizzo||''} onChange={(e)=>setForm({...form,indirizzo:e.target.value})} className="px-4 py-3 border-2 rounded-lg col-span-2"/><select value={form.stato||''} onChange={(e)=>setForm({...form,stato:e.target.value})} className="px-4 py-3 border-2 rounded-lg"><option value="">Stato</option><option value="In corso">In corso</option><option value="Completato">Completato</option></select><input type="date" value={form.dataInizio||''} onChange={(e)=>setForm({...form,dataInizio:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input type="number" placeholder="Budget" value={form.budget||''} onChange={(e)=>setForm({...form,budget:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"/><input type="number" placeholder="Speso" value={form.speso||''} onChange={(e)=>setForm({...form,speso:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"/></div>}
+{modal.type==='dipendenti'&&<div className="grid grid-cols-2 gap-4"><input placeholder="Nome *" value={form.nome||''} onChange={(e)=>setForm({...form,nome:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Cognome *" value={form.cognome||''} onChange={(e)=>setForm({...form,cognome:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Ruolo" value={form.ruolo||''} onChange={(e)=>setForm({...form,ruolo:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Matricola" value={form.matricola||''} onChange={(e)=>setForm({...form,matricola:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Tel" value={form.tel||''} onChange={(e)=>setForm({...form,tel:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input type="number" step="0.01" placeholder="Costo/h" value={form.costoOrario||''} onChange={(e)=>setForm({...form,costoOrario:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"/></div>}
+{modal.type==='attrezzature'&&<div className="space-y-4"><div className="grid grid-cols-2 gap-4"><input placeholder="Nome *" value={form.nome||''} onChange={(e)=>setForm({...form,nome:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Codice *" value={form.codice||''} onChange={(e)=>setForm({...form,codice:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><select value={form.tipo||'singola'} onChange={(e)=>setForm({...form,tipo:e.target.value})} className="px-4 py-3 border-2 rounded-lg"><option value="singola">🔧 Singola</option><option value="composta">📦 Composta</option></select><input placeholder="Categoria" value={form.cat||''} onChange={(e)=>setForm({...form,cat:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input type="number" min="1" placeholder="Quantità Totale *" value={form.qta||1} onChange={(e)=>setForm({...form,qta:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"/><select value={form.um||'pz'} onChange={(e)=>setForm({...form,um:e.target.value})} className="px-4 py-3 border-2 rounded-lg"><option value="pz">Pezzi</option><option value="mt">Metri</option><option value="kg">Kg</option><option value="lt">Litri</option></select><select value={form.ubicazione||'Deposito'} onChange={(e)=>{const loc=e.target.value;setForm({...form,ubicazione:loc,giacenze:{...form.giacenze,[loc]:form.qta||1}})}} className="px-4 py-3 border-2 rounded-lg"><option value="Deposito">Deposito</option>{cantieri.map(c=><option key={c.id} value={c.nome}>{c.nome}</option>)}</select><select value={form.stato||'Disponibile'} onChange={(e)=>setForm({...form,stato:e.target.value})} className="px-4 py-3 border-2 rounded-lg"><option value="Disponibile">Disponibile</option><option value="In uso">In uso</option></select><select value={form.assegnatoA||''} onChange={(e)=>setForm({...form,assegnatoA:e.target.value?Number(e.target.value):null})} className="px-4 py-3 border-2 rounded-lg col-span-2"><option value="">Assegna a</option>{dipendenti.map(d=><option key={d.id} value={d.id}>{d.nome} {d.cognome}</option>)}</select><input type="number" placeholder="Valore €" value={form.valore||''} onChange={(e)=>setForm({...form,valore:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg col-span-2"/></div></div>}
+{modal.type==='materiali'&&<div className="grid grid-cols-2 gap-4"><input placeholder="Codice *" value={form.codice||''} onChange={(e)=>setForm({...form,codice:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Nome *" value={form.nome||''} onChange={(e)=>setForm({...form,nome:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Categoria" value={form.cat||''} onChange={(e)=>setForm({...form,cat:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><select value={form.fornitoreId||''} onChange={(e)=>setForm({...form,fornitoreId:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"><option value="">Fornitore</option>{fornitori.map(f=><option key={f.id} value={f.id}>{f.nome}</option>)}</select><input type="number" placeholder="Giacenza" value={form.giacenza||''} onChange={(e)=>setForm({...form,giacenza:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="UM" value={form.um||''} onChange={(e)=>setForm({...form,um:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input type="number" step="0.01" placeholder="Costo €" value={form.costo||''} onChange={(e)=>setForm({...form,costo:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"/><input type="number" placeholder="Min" value={form.min||''} onChange={(e)=>setForm({...form,min:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"/></div>}
+{modal.type==='movimenti'&&<div className="space-y-4"><div className="grid grid-cols-2 gap-4"><select value={form.attrId||''} onChange={(e)=>setForm({...form,attrId:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg col-span-2"><option value="">Attrezzatura *</option>{attrezzature.map(a=><option key={a.id} value={a.id}>{a.nome} ({a.codice}) - Tot: {a.qta} {a.um}</option>)}</select><select value={form.da||''} onChange={(e)=>setForm({...form,da:e.target.value})} className="px-4 py-3 border-2 rounded-lg"><option value="">Da *</option><option value="Deposito">Deposito</option>{cantieri.map(c=><option key={c.id} value={c.nome}>{c.nome}</option>)}</select><select value={form.a||''} onChange={(e)=>setForm({...form,a:e.target.value})} className="px-4 py-3 border-2 rounded-lg"><option value="">A *</option><option value="Deposito">Deposito</option>{cantieri.map(c=><option key={c.id} value={c.nome}>{c.nome}</option>)}</select><input type="number" min="1" placeholder="Quantità *" value={form.qta||1} onChange={(e)=>setForm({...form,qta:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg col-span-2"/>{form.attrId&&form.da&&<div className="col-span-2 bg-blue-50 p-3 rounded"><p className="text-sm font-bold">Giacenza in {form.da}: {attrezzature.find(a=>a.id===form.attrId)?.giacenze?.[form.da]||0} {attrezzature.find(a=>a.id===form.attrId)?.um||'pz'}</p></div>}<select value={form.dipId||''} onChange={(e)=>setForm({...form,dipId:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg col-span-2"><option value="">Responsabile</option>{dipendenti.map(d=><option key={d.id} value={d.id}>{d.nome} {d.cognome}</option>)}</select></div></div>}
+{modal.type==='mezzi'&&<div className="grid grid-cols-2 gap-4"><input placeholder="Tipo *" value={form.tipo||''} onChange={(e)=>setForm({...form,tipo:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Targa *" value={form.targa||''} onChange={(e)=>setForm({...form,targa:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Marca" value={form.marca||''} onChange={(e)=>setForm({...form,marca:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Modello" value={form.modello||''} onChange={(e)=>setForm({...form,modello:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input type="number" placeholder="Km" value={form.km||''} onChange={(e)=>setForm({...form,km:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"/><input type="number" step="0.01" placeholder="Costo/km" value={form.costoKm||''} onChange={(e)=>setForm({...form,costoKm:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"/></div>}
+{modal.type==='scadenze'&&<div className="grid grid-cols-2 gap-4"><select value={form.tipo||''} onChange={(e)=>setForm({...form,tipo:e.target.value})} className="px-4 py-3 border-2 rounded-lg"><option value="">Tipo *</option><option value="Assicurazione">Assicurazione</option><option value="Revisione">Revisione</option><option value="Patente">Patente</option></select><input type="date" value={form.data||''} onChange={(e)=>setForm({...form,data:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input placeholder="Descrizione *" value={form.descrizione||''} onChange={(e)=>setForm({...form,descrizione:e.target.value})} className="px-4 py-3 border-2 rounded-lg col-span-2"/><input type="number" placeholder="Alert giorni" value={form.alert||30} onChange={(e)=>setForm({...form,alert:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"/></div>}
+{(modal.type==='ddt'||modal.type==='ordini')&&<div className="space-y-4"><div className="grid grid-cols-2 gap-4"><input placeholder="Numero *" value={form.numero||''} onChange={(e)=>setForm({...form,numero:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><input type="date" value={form.data||new Date().toISOString().split('T')[0]} onChange={(e)=>setForm({...form,data:e.target.value})} className="px-4 py-3 border-2 rounded-lg"/><select value={form.fornitoreId||''} onChange={(e)=>setForm({...form,fornitoreId:Number(e.target.value)})} className="px-4 py-3 border-2 rounded-lg"><option value="">Fornitore *</option>{fornitori.map(f=><option key={f.id} value={f.id}>{f.nome}</option>)}</select>{modal.type==='ordini'&&<select value={form.stato||'Attesa'} onChange={(e)=>setForm({...form,stato:e.target.value})} className="px-4 py-3 border-2 rounded-lg"><option value="Attesa">Attesa</option><option value="Evaso">Evaso</option></select>}</div><div><div className="flex justify-between mb-3"><h4 className="font-bold">Articoli</h4><button onClick={addArt} type="button" className="px-3 py-1 bg-blue-600 text-white rounded text-sm">+ Aggiungi</button></div>{(form.articoli||[]).map((a,i)=><div key={i} className="grid grid-cols-4 gap-2 mb-2"><select value={a.matId} onChange={(e)=>updArt(i,'matId',e.target.value)} className="px-3 py-2 border rounded"><option value="">Materiale</option>{materiali.map(m=><option key={m.id} value={m.id}>{m.nome}</option>)}</select><input type="number" placeholder="Qta" value={a.qta} onChange={(e)=>updArt(i,'qta',e.target.value)} className="px-3 py-2 border rounded"/><input type="number" step="0.01" placeholder="€" value={a.prezzo} onChange={(e)=>updArt(i,'prezzo',e.target.value)} className="px-3 py-2 border rounded"/><button onClick={()=>remArt(i)} type="button" className="px-3 py-2 bg-red-500 text-white rounded">🗑️</button></div>)}</div><div className="bg-blue-50 p-3 rounded"><p className="font-bold">Totale: {fmt.curr((form.articoli||[]).reduce((s,a)=>s+(a.qta*a.prezzo),0))}</p></div></div>}
+<div className="flex gap-3 pt-4 border-t-2">
+<button onClick={handleSave} className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold">💾 Salva</button>
+<button onClick={closeModal} className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold">❌ Annulla</button>
+</div>
+</div>
+</div>
+</div>
+);
+};
+
+if(loading)return<div className="min-h-screen flex items-center justify-center"><div className="spinner"></div></div>;
+if(!user)return<LoginPage onLogin={setUser}/>;
+
+const CaricaRapido=()=>{
+const[step,setStep]=useState(1);
+const[da,setDa]=useState('');
+const[a,setA]=useState('');
+const[scanning,setScanning]=useState(false);
+const[scannedItems,setScannedItems]=useState([]);
+const scannerRef=React.useRef(null);
+
+const startScanner=()=>{
+setScanning(true);
+setTimeout(()=>{
+const html5QrCode=new window.Html5Qrcode("qr-reader");
+html5QrCode.start(
+{facingMode:"environment"},
+{fps:10,qrbox:250},
+(decodedText)=>{
+const attr=attrezzature.find(a=>a.codice===decodedText);
+if(attr&&!scannedItems.find(x=>x.id===attr.id)){
+setScannedItems([...scannedItems,{...attr,qtaMov:1}]);
+const audio=new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBix+zPPTgjMGHm7A7+OZSA0PVqzn77BdGAg+ltryxnMiBSZ9y/PVgzUGHWu/7+KXRQ0NVKnn8LFfGgg8ltvyw3IkBSl7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSl7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGgg8ltvyw3IkBSh7yvPYhDYHH2q+7+OZSA0NVKnn8LFfGg==');
+audio.play();
+}
+}
+).catch(err=>console.error(err));
+scannerRef.current=html5QrCode;
+},100);
+};
+
+const stopScanner=()=>{
+if(scannerRef.current){
+scannerRef.current.stop().then(()=>{
+setScanning(false);
+scannerRef.current=null;
+});
+}
+};
+
+const handleConfirm=()=>{
+const now=new Date().toISOString();
+scannedItems.forEach(item=>{
+const qta=item.qtaMov||1;
+setMovimenti([{id:Date.now()+Math.random(),attrId:item.id,tipo:'carico',da,a,qta,data:now,dipId:dipendenti[0]?.id},...movimenti]);
+const newGiacenze={...item.giacenze};
+newGiacenze[da]=(newGiacenze[da]||0)-qta;
+newGiacenze[a]=(newGiacenze[a]||0)+qta;
+if(newGiacenze[da]<=0)delete newGiacenze[da];
+setAttrezzature(attrezzature.map(at=>at.id===item.id?{...at,giacenze:newGiacenze,ubicazione:Object.keys(newGiacenze)[0]||a,stato:'In uso'}:at));
+});
+const ddtNum='INT-'+Date.now();
+const totItems=scannedItems.reduce((sum,i)=>sum+(i.qtaMov||1),0);
+setDdt([{id:Date.now(),numero:ddtNum,data:now.split('T')[0],tipo:'Interno',articoli:scannedItems.map(i=>({nome:i.nome,codice:i.codice,qta:i.qtaMov||1})),da,a,totale:0},...ddt]);
+alert(`✅ Carico completato!\n${totItems} pezzi totali\nDDT: ${ddtNum}`);
+setStep(1);
+setScannedItems([]);
+setDa('');
+setA('');
+stopScanner();
+};
+
+return(
+<div className="space-y-6">
+<div className="bg-gradient-to-r from-green-500 to-blue-600 rounded-2xl p-6 text-white shadow-xl">
+<h2 className="text-3xl font-bold mb-2">📱 Carico Rapido</h2>
+<p className="opacity-90">Scansiona QR e genera documenti automaticamente</p>
+</div>
+{step===1&&(
+<div className="bg-white rounded-2xl p-6 shadow-xl space-y-4">
+<h3 className="text-xl font-bold">1️⃣ Dove ti trovi?</h3>
+<select value={da} onChange={(e)=>setDa(e.target.value)} className="w-full px-4 py-3 border-2 rounded-lg text-lg">
+<option value="">Seleziona ubicazione *</option>
+<option value="Deposito">🏢 Deposito</option>
+{cantieri.map(c=><option key={c.id} value={c.nome}>🏗️ {c.nome}</option>)}
+</select>
+<h3 className="text-xl font-bold mt-6">2️⃣ Dove stai portando le attrezzature?</h3>
+<select value={a} onChange={(e)=>setA(e.target.value)} className="w-full px-4 py-3 border-2 rounded-lg text-lg">
+<option value="">Seleziona destinazione *</option>
+<option value="Deposito">🏢 Deposito</option>
+{cantieri.map(c=><option key={c.id} value={c.nome}>🏗️ {c.nome}</option>)}
+</select>
+<button onClick={()=>{if(da&&a)setStep(2)}} disabled={!da||!a} className="w-full py-4 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl font-bold text-lg disabled:opacity-50">Avanti →</button>
+</div>
+)}
+{step===2&&(
+<div className="bg-white rounded-2xl p-6 shadow-xl space-y-4">
+<div className="flex justify-between items-center mb-4">
+<h3 className="text-xl font-bold">3️⃣ Scansiona Attrezzature</h3>
+<button onClick={()=>{stopScanner();setStep(1)}} className="px-4 py-2 bg-gray-200 rounded-lg">← Indietro</button>
+</div>
+<div className="bg-blue-50 p-4 rounded-lg">
+<p className="font-bold">Da: <span className="text-blue-600">{da}</span></p>
+<p className="font-bold">A: <span className="text-green-600">{a}</span></p>
+</div>
+{!scanning&&<button onClick={startScanner} className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg">📷 Avvia Scanner QR</button>}
+{scanning&&(
+<div>
+<div id="qr-reader" className="rounded-lg overflow-hidden border-4 border-blue-600"></div>
+<button onClick={stopScanner} className="w-full mt-4 py-3 bg-red-600 text-white rounded-xl font-bold">⏹️ Ferma Scanner</button>
+</div>
+)}
+<div className="mt-6">
+<h4 className="font-bold mb-3">✅ Attrezzature scansionate: ({scannedItems.length})</h4>
+<div className="space-y-2">
+{scannedItems.map((item,i)=>(
+<div key={i} className="flex justify-between items-center bg-green-50 p-4 rounded-lg border-2 border-green-200">
+<div className="flex-1">
+<p className="font-bold">{item.nome}</p>
+<p className="text-sm text-gray-600">{item.codice}</p>
+<p className="text-xs text-gray-500">Disp. in {da}: {item.giacenze?.[da]||0} {item.um||'pz'}</p>
+</div>
+<div className="flex items-center gap-2">
+<input type="number" min="1" max={item.giacenze?.[da]||1} value={item.qtaMov||1} onChange={(e)=>{const newItems=[...scannedItems];newItems[i].qtaMov=Number(e.target.value);setScannedItems(newItems)}} className="w-20 px-2 py-1 border-2 rounded text-center font-bold"/>
+<span className="text-sm">{item.um||'pz'}</span>
+<button onClick={()=>setScannedItems(scannedItems.filter((_,x)=>x!==i))} className="px-3 py-2 bg-red-500 text-white rounded">🗑️</button>
+</div>
+</div>
+))}
+</div>
+{scannedItems.length>0&&(
+<button onClick={handleConfirm} className="w-full mt-6 py-4 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl font-bold text-lg">✅ Conferma Carico ({scannedItems.length} attrezzature)</button>
+)}
+</div>
+</div>
+)}
+</div>
+);
+};
+
+const Dashboard=()=>(
+<div className="space-y-6">
+<h2 className="text-4xl font-bold">Dashboard</h2>
+<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-xl"><p className="text-sm opacity-90">Cantieri</p><p className="text-5xl font-bold mt-2">{cantieri.length}</p></div>
+<div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-xl"><p className="text-sm opacity-90">Dipendenti</p><p className="text-5xl font-bold mt-2">{dipendenti.length}</p></div>
+<div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-xl"><p className="text-sm opacity-90">Attrezzature</p><p className="text-5xl font-bold mt-2">{attrezzature.length}</p></div>
+<div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl p-6 text-white shadow-xl"><p className="text-sm opacity-90">Rapportini</p><p className="text-5xl font-bold mt-2">{rapportini.length}</p></div>
+</div>
+<div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl p-8 text-white"><h3 className="text-3xl font-bold mb-4">🎉 Sistema Completo!</h3><div className="grid md:grid-cols-3 gap-4 text-sm"><div><p className="font-bold mb-2">✅ Base:</p><ul className="space-y-1 opacity-90"><li>• Cantieri, Fornitori</li><li>• Dipendenti completi</li><li>• Materiali, Attrezzature</li></ul></div><div><p className="font-bold mb-2">📋 Avanzato:</p><ul className="space-y-1 opacity-90"><li>• Movimentazioni</li><li>• Mezzi</li><li>• Scadenzario</li><li>• Rapportini wizard</li></ul></div><div><p className="font-bold mb-2">📊 Extra:</p><ul className="space-y-1 opacity-90"><li>• DDT, Ordini</li><li>• Export Excel</li><li>• Stampe PDF</li><li>• QR Code</li></ul></div></div></div>
+</div>
+);
+
+const menu=[
+{id:'dashboard',label:'Dashboard',icon:Icon.Chart},
+{id:'scanner',label:'📱 Carico Rapido',icon:Icon.Check},
+{id:'report',label:'📊 Report',icon:Icon.Chart},
+{id:'cantieri',label:'Cantieri',icon:Icon.Home},
+{id:'dipendenti',label:'Dipendenti',icon:Icon.Users},
+{id:'attrezzature',label:'Attrezzature',icon:Icon.Tool},
+{id:'movimenti',label:'Movimentazioni',icon:Icon.Clipboard},
+{id:'mezzi',label:'Mezzi',icon:Icon.Truck},
+{id:'materiali',label:'Materiali',icon:Icon.Package},
+{id:'fornitori',label:'Fornitori',icon:Icon.Briefcase},
+{id:'rapportini',label:'Rapportini',icon:Icon.Clipboard},
+{id:'ddt',label:'DDT',icon:Icon.FileText},
+{id:'ordini',label:'Ordini',icon:Icon.FileText},
+{id:'scadenze',label:'Scadenzario',icon:Icon.Calendar}
+];
+
+const renderSection=()=>{
+if(section==='dashboard')return<Dashboard/>;
+if(section==='scanner')return<CaricaRapido/>;
+if(section==='report'){
+const rappFiltrati=rapportini.filter(r=>{
+if(filtroData1&&r.data<filtroData1)return false;
+if(filtroData2&&r.data>filtroData2)return false;
+if(filtroCantiere&&r.cantiereId!==Number(filtroCantiere))return false;
+if(filtroDipendente&&!r.presenze?.find(p=>p.dipId===Number(filtroDipendente)))return false;
+return true;
+});
+const movFiltrati=movimenti.filter(m=>{
+if(filtroData1&&m.data<filtroData1)return false;
+if(filtroData2&&m.data>filtroData2)return false;
+return true;
+});
+const stampaPDF=()=>{
+const{jsPDF}=window.jspdf;
+const doc=new jsPDF();
+doc.setFontSize(20);
+doc.text('REPORT IAZZETTA',105,20,{align:'center'});
+doc.setFontSize(10);
+if(filtroData1||filtroData2)doc.text(`Periodo: ${filtroData1||'inizio'} - ${filtroData2||'oggi'}`,20,30);
+doc.setFontSize(14);
+let y=40;
+doc.text(`Rapportini: ${rappFiltrati.length}`,20,y);y+=10;
+doc.text(`Movimenti: ${movFiltrati.length}`,20,y);y+=10;
+doc.text(`Cantieri attivi: ${cantieri.filter(c=>c.stato==='In corso').length}`,20,y);y+=10;
+doc.text(`Dipendenti: ${dipendenti.length}`,20,y);
+doc.save(`Report_${Date.now()}.pdf`);
+};
+return(
+<div className="space-y-6">
+<h2 className="text-3xl font-bold">📊 Report & Statistiche</h2>
+<div className="bg-white rounded-xl p-6 shadow-lg">
+<h3 className="text-xl font-bold mb-4">🔍 Filtri</h3>
+<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+<input type="date" value={filtroData1} onChange={(e)=>setFiltroData1(e.target.value)} placeholder="Da" className="px-4 py-2 border-2 rounded-lg"/>
+<input type="date" value={filtroData2} onChange={(e)=>setFiltroData2(e.target.value)} placeholder="A" className="px-4 py-2 border-2 rounded-lg"/>
+<select value={filtroCantiere} onChange={(e)=>setFiltroCantiere(e.target.value)} className="px-4 py-2 border-2 rounded-lg"><option value="">Tutti i cantieri</option>{cantieri.map(c=><option key={c.id} value={c.id}>{c.nome}</option>)}</select>
+<select value={filtroDipendente} onChange={(e)=>setFiltroDipendente(e.target.value)} className="px-4 py-2 border-2 rounded-lg"><option value="">Tutti i dipendenti</option>{dipendenti.map(d=><option key={d.id} value={d.id}>{d.nome} {d.cognome}</option>)}</select>
+</div>
+<button onClick={stampaPDF} className="mt-4 px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-xl font-bold">📄 Stampa Report PDF</button>
+</div>
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-xl"><h3 className="font-bold mb-2 opacity-90">🏗️ Cantieri</h3><p className="text-4xl font-bold">{cantieri.length}</p><p className="text-sm opacity-90">In corso: {cantieri.filter(c=>c.stato==='In corso').length}</p></div>
+<div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-xl"><h3 className="font-bold mb-2 opacity-90">👷 Dipendenti</h3><p className="text-4xl font-bold">{dipendenti.length}</p><p className="text-sm opacity-90">Totali attivi</p></div>
+<div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-xl"><h3 className="font-bold mb-2 opacity-90">🔧 Attrezzature</h3><p className="text-4xl font-bold">{attrezzature.length}</p><p className="text-sm opacity-90">Tot pz: {attrezzature.reduce((s,a)=>s+(a.qta||1),0)}</p></div>
+<div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-xl p-6 text-white shadow-xl"><h3 className="font-bold mb-2 opacity-90">📦 Materiali</h3><p className="text-4xl font-bold">{materiali.length}</p><p className="text-sm opacity-90">Sotto scorta: {materiali.filter(m=>m.giacenza<=m.min).length}</p></div>
+<div className="bg-gradient-to-br from-red-500 to-pink-500 rounded-xl p-6 text-white shadow-xl"><h3 className="font-bold mb-2 opacity-90">📋 Rapportini</h3><p className="text-4xl font-bold">{rappFiltrati.length}</p><p className="text-sm opacity-90">Filtrati</p></div>
+<div className="bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl p-6 text-white shadow-xl"><h3 className="font-bold mb-2 opacity-90">🚚 Movimenti</h3><p className="text-4xl font-bold">{movFiltrati.length}</p><p className="text-sm opacity-90">Filtrati</p></div>
+</div>
+<div className="bg-white rounded-xl p-6 shadow-lg"><h3 className="text-xl font-bold mb-4">📍 Giacenze Attrezzature</h3><div className="space-y-3">{attrezzature.map(a=><div key={a.id} className="border-b pb-3"><p className="font-bold">{a.nome} - Tot: {a.qta} {a.um}</p><div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">{Object.entries(a.giacenze||{}).map(([loc,qty])=><div key={loc} className="bg-blue-50 p-2 rounded"><p className="font-semibold text-sm">{loc}</p><p className="text-xs font-bold text-blue-600">{qty} {a.um||'pz'} ({Math.round((qty/a.qta)*100)}%)</p></div>)}</div></div>)}</div></div>
+</div>
+);
+}
+const dataMap={fornitori,cantieri,dipendenti,attrezzature,materiali,movimenti,mezzi,rapportini,ddt,ordini,scadenze};
+const data=dataMap[section]||[];
+const filtered=data.filter(item=>!search||JSON.stringify(item).toLowerCase().includes(search.toLowerCase()));
+const labels={fornitori:'Fornitore',cantieri:'Cantiere',dipendenti:'Dipendente',attrezzature:'Attrezzatura',materiali:'Materiale',movimenti:'Movimento',mezzi:'Mezzo',rapportini:'Rapportino',ddt:'DDT',ordini:'Ordine',scadenze:'Scadenza'};
+return(
+<div className="space-y-6">
+<div className="flex justify-between items-center">
+<h2 className="text-3xl font-bold">Gestione {labels[section]}</h2>
+<div className="flex gap-2">
+<input type="text" placeholder="Cerca..." value={search} onChange={(e)=>setSearch(e.target.value)} className="px-4 py-2 border-2 rounded-lg w-64"/>
+{section==='attrezzature'&&<button onClick={()=>handlePrintQRMultiple(filtered)} className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">🖨️ Stampa Etichette QR</button>}
+<button onClick={()=>openModal(section)} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"><Icon.Plus/>Nuovo</button>
+</div>
+</div>
+<div className="grid gap-4">
+{filtered.map(item=>(
+<div key={item.id} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all">
+<div className="flex justify-between items-start">
+<div className="flex-1">
+{section==='fornitori'&&<div><h3 className="text-xl font-bold">{item.nome}</h3><p className="text-sm text-gray-600">P.IVA: {item.piva} - Tel: {item.tel}</p></div>}
+{section==='cantieri'&&<div><h3 className="text-xl font-bold">{item.nome}</h3><p className="text-gray-600">{item.cliente}</p><div className="mt-2"><span className={`px-3 py-1 rounded-full text-xs ${item.stato==='In corso'?'bg-green-100 text-green-800':'bg-blue-100 text-blue-800'}`}>{item.stato}</span><span className="ml-2 text-sm">{fmt.curr(item.speso)} / {fmt.curr(item.budget)}</span></div></div>}
+{section==='dipendenti'&&<div><h3 className="text-xl font-bold">{item.nome} {item.cognome}</h3><p className="text-gray-600">{item.ruolo} - {item.matricola}</p><div className="mt-2 flex gap-2"><button onClick={()=>openModal('dipDettaglio',item)} className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs">✓ {item.dpi?.length||0} DPI</button><button onClick={()=>openModal('dipDettaglio',item)} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">✓ {item.visite?.length||0} Visite</button><button onClick={()=>openModal('dipDettaglio',item)} className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">✓ {item.corsi?.length||0} Corsi</button></div></div>}
+{section==='attrezzature'&&<div><h3 className="text-lg font-bold">{item.nome}</h3><p className="text-sm font-mono text-gray-600">{item.codice}</p><div className="mt-2 space-y-2"><p className="text-sm"><strong>📦 Totale:</strong> {item.qta||1} {item.um||'pz'}</p><div className="bg-gray-50 p-2 rounded"><p className="text-xs font-bold mb-1">Giacenze per ubicazione:</p>{Object.entries(item.giacenze||{}).map(([loc,qty])=><div key={loc} className="flex justify-between text-xs"><span>📍 {loc}</span><span className={`font-bold ${(qty/(item.qta||1))>0.5?'text-green-600':(qty/(item.qta||1))>0.2?'text-orange-600':'text-red-600'}`}>{qty} {item.um||'pz'} ({Math.round((qty/(item.qta||1))*100)}%)</span></div>)}{Object.keys(item.giacenze||{}).length===0&&<p className="text-xs text-gray-500">Nessuna giacenza</p>}</div><div><span className={`px-3 py-1 rounded-full text-xs ${item.stato==='Disponibile'?'bg-green-100 text-green-800':'bg-orange-100 text-orange-800'}`}>{item.stato}</span>{item.tipo==='composta'&&<span className="ml-2 px-3 py-1 rounded-full text-xs bg-purple-100 text-purple-800">🔧 Composta ({item.componenti?.length||0} pz)</span>}</div></div><button onClick={()=>handlePrintQR(item.codice,item.nome)} className="mt-2 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm">QR Code</button></div>}
+{section==='materiali'&&<div><h3 className="text-lg font-bold">{item.nome}</h3><p className="text-sm text-gray-600">Giacenza: {item.giacenza} {item.um} - Costo: {fmt.curr(item.costo)}/{item.um}</p>{item.giacenza<=item.min&&<span className="inline-block mt-2 px-2 py-1 bg-red-100 text-red-800 rounded text-xs">⚠️ Scorta minima</span>}</div>}
+{section==='movimenti'&&<div><h3 className="text-lg font-bold">{fmt.datetime(item.data)}</h3><p className="text-sm text-gray-600">Attrezzatura: {attrezzature.find(a=>a.id===item.attrId)?.nome}</p><p className="text-sm"><strong>Qta:</strong> {item.qta||1} {attrezzature.find(a=>a.id===item.attrId)?.um||'pz'}</p><p className="text-sm">📍 Da: <strong>{item.da}</strong> → A: <strong>{item.a}</strong></p></div>}
+{section==='mezzi'&&<div><h3 className="text-xl font-bold">{item.tipo} {item.marca} {item.modello}</h3><p className="text-sm text-gray-600">Targa: {item.targa} - Km: {item.km?.toLocaleString()}</p></div>}
+{section==='rapportini'&&<div><h3 className="text-xl font-bold">Rapportino {fmt.date(item.data)}</h3><p className="text-gray-600">{cantieri.find(c=>c.id===item.cantiereId)?.nome}</p><button onClick={()=>handlePrintPDF('Rapportino',item)} className="mt-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm"><Icon.Printer/> PDF</button></div>}
+{section==='ddt'&&<div><h3 className="text-xl font-bold">DDT {item.numero}</h3><p className="text-sm text-gray-600">Fornitore: {fornitori.find(f=>f.id===item.fornitoreId)?.nome}</p><p className="font-bold text-green-600">{fmt.curr(item.totale)}</p><button onClick={()=>handlePrintPDF('DDT',item)} className="mt-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm"><Icon.Printer/> PDF</button></div>}
+{section==='ordini'&&<div><h3 className="text-xl font-bold">Ordine {item.numero}</h3><p className="text-sm text-gray-600">Fornitore: {fornitori.find(f=>f.id===item.fornitoreId)?.nome}</p><span className={`px-3 py-1 rounded-full text-xs ${item.stato==='Evaso'?'bg-green-100 text-green-800':'bg-orange-100 text-orange-800'}`}>{item.stato}</span></div>}
+{section==='scadenze'&&<div><div className="flex justify-between"><div><h3 className="text-lg font-bold">{item.tipo}</h3><p className="text-sm text-gray-600">{item.descrizione}</p></div><span className={`px-3 py-1 rounded-full text-xs ${item.completato?'bg-gray-100 text-gray-600':new Date(item.data)<new Date()?'bg-red-100 text-red-800':'bg-green-100 text-green-800'}`}>{item.completato?'✓':fmt.date(item.data)}</span></div></div>}
+</div>
+<div className="flex gap-2">
+<button onClick={()=>openModal(section,item)} className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200"><Icon.Edit/></button>
+</div>
+</div>
+</div>
+))}
+</div>
+</div>
+);
+};
+
+return(
+<div className="min-h-screen bg-gray-50">
+<Modal/>
+<div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-2xl">
+<div className="container mx-auto px-6 py-5">
+<div className="flex justify-between items-center">
+<div>
+<h1 className="text-4xl font-bold">Iazzetta Gestionale</h1>
+<p className="text-sm mt-1 opacity-90">{user.email}</p>
+</div>
+<div className="flex gap-2">
+<button onClick={handleExportExcel} className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg flex items-center gap-2"><Icon.Download/>Excel</button>
+<button onClick={handleBackup} className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg">Backup</button>
+<button onClick={handleLogout} className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg">Esci</button>
+</div>
+</div>
+</div>
+</div>
+<div className="container mx-auto px-6 py-6">
+<div className="flex gap-6">
+<div className="w-64 flex-shrink-0">
+<div className="bg-white rounded-2xl shadow-xl p-4 sticky top-6">
+<nav className="space-y-2">
+{menu.map(m=><button key={m.id} onClick={()=>setSection(m.id)} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium ${section===m.id?'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg':'text-gray-700 hover:bg-gray-100'}`}><m.icon/><span>{m.label}</span></button>)}
+</nav>
+</div>
+</div>
+<div className="flex-1">{renderSection()}</div>
+</div>
+</div>
+</div>
+);
+};
+
+ReactDOM.render(<App/>,document.getElementById('root'));
+</script>
+<script>
+if('serviceWorker'in navigator){
+window.addEventListener('load',()=>{
+navigator.serviceWorker.register('data:text/javascript;base64,'+btoa(`
+self.addEventListener('install',e=>{
+  console.log('SW: Installato');
+  self.skipWaiting();
+});
+self.addEventListener('activate',e=>{
+  console.log('SW: Attivato');
+  e.waitUntil(clients.claim());
+});
+self.addEventListener('fetch',e=>{
+  e.respondWith(
+    fetch(e.request).catch(()=>caches.match(e.request))
+  );
+});
+`)).then(()=>console.log('✅ PWA attiva!')).catch(e=>console.log('PWA:',e));
+});
+}
+</script>
+</body>
+</html>
